@@ -5,6 +5,11 @@ const { ApolloServer, gql } = require('apollo-server');
 // your data.
 const typeDefs = gql`
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+  type Todo {
+    id: String
+    text: String
+    completed: Boolean
+  }
 
   # This "Book" type defines the queryable fields for every book in our data source.
   type Book {
@@ -17,6 +22,12 @@ const typeDefs = gql`
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
     books: [Book]
+    todos: [Todo]!
+  }
+
+  type Mutation {
+    createTodo(text: String!):String
+    removeTodo(id: String!):String
   }
 `;
 
@@ -31,12 +42,47 @@ const books = [
     },
   ];
 
+const todos = [
+  {
+    id: 0,
+    text: 'Hello from GraphQL',
+    completed: false,
+  },
+  {
+    id: 123,
+    text: 'Hello from GraphQL',
+    completed: false,
+  },
+];
+
 // Resolvers define the technique for fetching the types defined in the
 // schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
     Query: {
       books: () => books,
+      todos: () => todos,
     },
+    Mutation: {
+      createTodo: (parent, args, context, info) => {
+        console.log('inside index.js')
+
+        return todos.push({
+          id: Date.now().toString(),
+          text: args.text,
+          completed: false,
+        });
+      },
+      // removeAllTodos: (parent, args, context, info) => {
+      //   todos.length = 0
+      //   return todos.length;
+      // },
+      removeTodo: (parent, args, context, info) => {
+        console.log(args)
+        console.log('HELLO')
+        todos.length = 0
+        return todos.length;
+      }
+    }
   };
 
 // The ApolloServer constructor requires two parameters: your schema
