@@ -72,14 +72,20 @@ const resolvers = {
           completed: false,
         });
       },
-      // removeAllTodos: (parent, args, context, info) => {
-      //   todos.length = 0
-      //   return todos.length;
-      // },
-      removeTodo: (parent, args, context, info) => {
-        console.log(args)
-        console.log('HELLO')
+      removeAllTodos: (parent, args, context, info) => {
         todos.length = 0
+        return todos.length;
+      },
+      removeTodo: (parent, args, context, info) => {
+        // console.log('123123')
+        let list = args.id.split(',').sort((a, b) => a - b)
+        for (let t in list) {
+          for (let i = 0; i < todos.length; i++) {
+            if (todos[i].id == list[t]) {
+              todos.splice(i, 1);
+            }
+          }
+        }
         return todos.length;
       }
     }
