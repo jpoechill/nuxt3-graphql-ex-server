@@ -48,11 +48,6 @@ const todos = [
     text: 'Hello from GraphQL',
     completed: false,
   },
-  {
-    id: 123,
-    text: 'Hello from GraphQL',
-    completed: false,
-  },
 ];
 
 // Resolvers define the technique for fetching the types defined in the
@@ -64,8 +59,6 @@ const resolvers = {
     },
     Mutation: {
       createTodo: (parent, args, context, info) => {
-        console.log('inside index.js')
-
         return todos.push({
           id: Date.now().toString(),
           text: args.text,
@@ -77,7 +70,6 @@ const resolvers = {
         return todos.length;
       },
       removeTodo: (parent, args, context, info) => {
-        // console.log('123123')
         let list = args.id.split(',').sort((a, b) => a - b)
         for (let t in list) {
           for (let i = 0; i < todos.length; i++) {
